@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<link rel="stylesheet" type="text/css" href="font.css">
+	</head>
+	<body>
+		<div id='chat'>
+		</div>
+		<script>
+			//the below shouldn't be edited unless you know what you're doing
+			//If you find something wrong with the code below, suggestions are appreciated!
+			var socket = io();
+			var colors = {};
+			var c = document.getElementById('chat')
+			var q = parseQuery(window.location.search)
+			var qu = q.queue
+			var badge = {}
+			var w = ''
+			var con = {badgeSize:1.2,emoteSize:2.2}
+			if(qu==''){qu=100} else {qu=eval(qu)}
+			function randomColor(){
+				var a = ['blue','coral','dodgerblue','springgreen','yellowgreen','green','orangered','red','goldenrod','hotpink','cadetblue','seagreen','chocolate','blueviolet','firebrick']
+				return a[Math.floor(Math.random()*a.length)]
+			}
+			function doot() {
+				var y = document.createElement('p')
+				c.innerHTML = '';
+				y.innerHTML = "<i>Connected to chatroom successfully!</i>"
+				c.insertBefore(y,c.firstChild);
+				w = window.getComputedStyle(document.getElementsByTagName('P')[0]).fontSize.substring(0,window.getComputedStyle(document.getElementsByTagName('P')[0]).fontSize.length-2)
+			}
+			socket.on('badges',function(data) {badge=data})
+			socket.on('constants',function(data){con=data})
+			socket.on('ref',function(data){c.innerHTML='<p><i>Chat cleared by moderator</i></p>'})
+			socket.on('initi',function(data) {
+				socket.emit('init',{q: window.location.search})
+				doot()
+			})
+			socket.on('message',function(data){
+				var q = document.createElement('p')
+				if(eval('colors.'+data.u.username+'==null')) {
+					if(data.u.color==null){
+						eval('colors.'+data.u.username+' = randomColor()')
+					} else {
+						eval('colors.'+data.u.username+' = data.u.color')
+					}
+				} else if(eval('colors.'+data.u.username+'!=data.u.color && data.u.color!=null')) {
+					eval('colors.'+data.u.username+' = data.u.color')
+				}
+				var b = ""
+				if(data.u.badges!=null && badge!={}) {
+					for(i=0;i<Object.keys(data.u.badges).length;i++){
+						b+=('<img src="'+eval('badge.'+Object.keys(data.u.badges)[i]+'.image')+'" height="'+eval('Math.floor('+w+'*con.badgeSize)')+'"></img>')
+					}
+				}
+				if(data.u.emotes!=null) {
+					data.m = formatEmotes(data.m,data.u.emotes)
+				}
+				if(b!==''){b+=' '}
+				q.innerHTML = '<span>'+b+'<b style="color:'+eval('colors.'+data.u.username)+'">'+data.d+'</b>: '+data.m+'</span>'
+				q.id="message"
+				c.prepend(q);
+				if(c.childNodes.length>qu){c.removeChild(c.childNodes[qu])}
+			})
+			function parseQuery(qstr) {
+				var query = {};
+				var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
+				for (var i = 0; i < a.length; i++) {
+					var b = a[i].split('=');
+					query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+				}
+				return query;
+			}
+			
+			//Credit to AlcaDesign for the format emotes function, couldn't have found it out myself!
+			//find it here: https://github.com/tmijs/tmi.js/issues/11#issuecomment-116459845
+			function formatEmotes(text, emotes) {
+				var splitText = text.split('');
+				for(var i in emotes) {
+					var e = emotes[i];
+					for(var j in e) {
+						var mote = e[j];
+						if(typeof mote == 'string') {
+							mote = mote.split('-');
+							mote = [parseInt(mote[0]), parseInt(mote[1])];
+							var length =  mote[1] - mote[0],
+								empty = Array.apply(null, new Array(length + 1)).map(function() { return '' });
+							splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length));
+							splitText.splice(mote[0], 1, '<img height="'+eval('Math.floor('+w+'*con.emoteSize)')+'" src="http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0">');
+						}
+					}
+				}
+				return splitText.join('');
+			}
+		</script>
+	</body>
+</html>

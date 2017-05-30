@@ -1,0 +1,2 @@
+start iexplore "https://api.twitch.tv/kraken/oauth2/authorize?scope=chat_login&response_type=token&client_id=gpxn705914tu18rq2w34wmzezdyry3&redirect_uri=http://localhost:8082/auth"
+node "%~dp0recieve.js"

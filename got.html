@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	</head>
+	<body>
+		<textarea rows="1" cols="100" id="url">loading, please wait...</textarea>
+		<p id="in" style="font-family:arial"></p>
+		<script>
+			var u = location.href
+			var p = '#access_token='
+			var hash = u.substring(u.indexOf(p)+p.length,u.indexOf('&',u.indexOf(p)))
+			document.getElementById('url').innerHTML = "localhost:8080/Output.html?oauth="+hash
+			document.getElementById('in').innerHTML = "The above link is what you put into BrowserSource in OBS. DON'T LOSE IT!"
+		</script>
+	</body>
+</html>

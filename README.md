@@ -14,7 +14,7 @@ It's fairly easy to set up, and customizable as well! (At the moment, there is o
 # To set up:
 There are some requirements before you can run the scripts.
 * Have Node.js installed (https://nodejs.org/en/download/)
-* After that, install Socket.io and TMI.js (This can be done by manually installing each, installing through npm with instructions from their respective websites (https://docs.tmijs.org/v1.2.1/index.html#install and https://socket.io/docs/#installing), or using the setup.bat file provided)
+* After that, install Socket.io and TMI.js (This can be done by manually installing each or installing through npm with instructions from their respective websites (https://docs.tmijs.org/v1.2.1/index.html#install and https://socket.io/docs/#installing))
 
 1. After you have all the required nodes, open authorize.bat.
 2. After this, Internet Explorer should open, and ask you to log in if you haven't already.

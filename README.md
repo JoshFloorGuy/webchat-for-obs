@@ -3,7 +3,7 @@ Webchat is a set of scripts used to generate a clean twitch chat feed for Open B
 
 It's fairly easy to set up, and customizable as well! (At the moment, there is only a windows release, sorry Apple users!)
 
-# Current Functionality
+## Current Functionality
 * Connects to chatrooms as you
 * Creates a feed with customizable length
 * Assigns random colors to users if color isn't set
@@ -55,3 +55,6 @@ constants.json is opened by home.js when Output.html connects to the HTTP server
 If there are extreme errors in my coding, please call me out! I also plan to add a bit more customization, like toggling timestamps. If there is anything that anyone thinks should be added, please tell me.
 ### Planned updates
 * adding timestamps
+
+## Final Words
+If you use this, please provide a link!

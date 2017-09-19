@@ -42,7 +42,7 @@ Properties that can be set at the moment are:
 * queue (sets how many messages are visible at once, default is 100) Example: '&queue=20'
 More will be added!
 
-Example of url with querystring: 'http://localhost:8080/Output.html?oauth=[your token]&channel=[channel name]&queue=20'
+Example of url with querystring: 'http://localhost:8080/Output.html?oauth=[yourToken]&channel=[channelName]&queue=20'
 
 ### In the font.css file
 The css file was included to allow easy customization of the font of the text.

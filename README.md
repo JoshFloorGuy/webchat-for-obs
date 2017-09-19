@@ -57,4 +57,8 @@ If there are extreme errors in my coding, please call me out! I also plan to add
 * adding timestamps
 
 ## Final Words
-If you use this, please provide a link!
+Credit to AlcaDesign for the format emotes function, couldn't have found it out myself!
+Find it here: https://github.com/tmijs/tmi.js/issues/11#issuecomment-116459845
+
+
+If you use this project, please provide a link back here!

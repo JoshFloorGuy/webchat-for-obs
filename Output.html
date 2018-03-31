@@ -13,25 +13,31 @@
 			var colors = {};
 			var c = document.getElementById('chat')
 			var q = parseQuery(window.location.search)
-			var qu = q.queue
 			var badge = {}
+			var messageQueue = [];
+			var messageView = [];
+			var messageID = 0;
 			var w = ''
-			var con = {badgeSize:1.2,emoteSize:2.2}
-			if(qu==''){qu=100} else {qu=eval(qu)}
+			var con = {badgeSize:1.2,emoteSize:2.2,queueSize:25,messageLife:-1,topDown:true,deleteIfNotFull:false}
 			function randomColor(){
 				var a = ['blue','coral','dodgerblue','springgreen','yellowgreen','green','orangered','red','goldenrod','hotpink','cadetblue','seagreen','chocolate','blueviolet','firebrick']
 				return a[Math.floor(Math.random()*a.length)]
 			}
 			function doot() {
 				var y = document.createElement('p')
+				y.id="message0"
 				c.innerHTML = '';
-				y.innerHTML = "<i>Connected to chatroom successfully!</i>"
+				y.innerHTML = '<i>Connected to chatroom successfully!</i>'
+				messageView = [{id:"message0",expiretime:10,absoDel:true}]
 				c.insertBefore(y,c.firstChild);
 				w = window.getComputedStyle(document.getElementsByTagName('P')[0]).fontSize.substring(0,window.getComputedStyle(document.getElementsByTagName('P')[0]).fontSize.length-2)
 			}
 			socket.on('badges',function(data) {badge=data})
 			socket.on('constants',function(data){con=data})
-			socket.on('ref',function(data){c.innerHTML='<p><i>Chat cleared by moderator</i></p>'})
+			socket.on('ref',function(data){
+				c.innerHTML='<p id="window0"><i>Chat cleared by moderator</i></p>'
+				messageView = [{id:"message0",expiretime:10,absoDel:true}]
+			})
 			socket.on('initi',function(data) {
 				socket.emit('init',{q: window.location.search})
 				doot()
@@ -58,9 +64,9 @@
 				}
 				if(b!==''){b+=' '}
 				q.innerHTML = '<span>'+b+'<b style="color:'+eval('colors.'+data.u.username)+'">'+data.d+'</b>: '+data.m+'</span>'
-				q.id="message"
-				c.prepend(q);
-				if(c.childNodes.length>qu){c.removeChild(c.childNodes[qu])}
+				messageID++;
+				q.id="message"+messageID;
+				messageQueue.push({id:q.id,object:q});
 			})
 			function parseQuery(qstr) {
 				var query = {};
@@ -72,7 +78,35 @@
 				return query;
 			}
 			
-			//Credit to AlcaDesign for the format emotes function, couldn't have found it out myself!
+			var childQueue = setInterval(function() {
+				var n = 0;
+				var l = messageView.length
+				for(var i = 0; i<l; i++) {
+					var o = messageView[i-n];
+					if(o.expiretime<=0 && (o.absoDel || l==con.queueSize)) {
+						document.getElementById(o.id).remove();
+						messageView.splice(i-n,1);
+						n++;
+					} else {
+						messageView[i-n].expiretime--;
+					}
+				}
+				if(n==0) {n=con.queueSize-messageView.length}
+				for(var i = 0; (i<n); i++) {
+					if(messageQueue.length == 0) {break}
+					var o = messageQueue[0]
+					console.log(o)
+					messageView.push({id:o.id,expiretime:con.messageLife,absoDel:con.deleteIfNotFull})
+					if(con.topDown) {
+						c.prepend(o.object)
+					} else {
+						c.appendChild(o.object)
+					}
+					messageQueue.splice(0,1)
+				}
+			},1000);
+			
+			//Credit to AlcaDesign for the format emotes function, couldn't have made the program without it!
 			//find it here: https://github.com/tmijs/tmi.js/issues/11#issuecomment-116459845
 			function formatEmotes(text, emotes) {
 				var splitText = text.split('');
@@ -91,6 +125,17 @@
 					}
 				}
 				return splitText.join('');
+			}
+			//Function below comes from here: https://stackoverflow.com/questions/3387427/remove-element-by-id
+			Element.prototype.remove = function() {
+				this.parentElement.removeChild(this);
+			}
+			NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+				for(var i = this.length - 1; i >= 0; i--) {
+					if(this[i] && this[i].parentElement) {
+						this[i].parentElement.removeChild(this[i]);
+					}
+				}
 			}
 		</script>
 	</body>

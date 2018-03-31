@@ -1,4 +1,8 @@
 {
 	"badgeSize": 1.2,
-	"emoteSize": 2.2
+	"emoteSize": 2.2,
+	"queueSize": 25,
+	"messageLife": -1,
+	"topDown": false,
+	"deleteIfNotFull": false
 }

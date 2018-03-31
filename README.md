@@ -9,11 +9,11 @@ It's fairly easy to set up, and customizable as well! (At the moment, there is o
 * Added option to delete messages on a full queue or not
 * Moved queue length to constants.json
 * Made initial connection or chat clear messages temporary
+* Cannot read other channels' chat streams anymore
 * Edited README
 
 ## Current Functionality
-* Connects to chatrooms as you
-* Creates a customizable HTML feed of a twitch chat
+* Connects to your chat room to create a customizable HTML feed of your twitch chat
 * Correctly displays name displayed in chat
 * Shows badges and emotes
 
@@ -37,14 +37,8 @@ When you plan to use this in stream, first make sure that OBS is closed. Then, e
 
 # Customize your Feed
 There are a few places that the feed can be customized:
-* Querystring
 * In constants.json
 * In the font.css file
-
-### Querystring on the URL
-As of 2.0, there is only one option that could be passed in the query string, which is channel. This defaults to your twitch account, but if you need to view somebody else's chat with Webchat, add '&channel=' andtheir channel username to the end of your url.
-
-Example of url with querystring: 'http://localhost:8080/Output.html?oauth=[yourToken]&channel=[channelName]'
 
 ### In constants.json
 In the constants.json file, I've put all the custom variables that I've implemented. With all of them in this file, you can make edits to the way the chat feed acts without editing the HTML. In this version, there are the following variables:
